@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para o Amor da Minha Vida</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffe0ec, #ffe7f1);
+      overflow-x: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    #hearts-canvas {
+      z-index: -1;
+    }
+
+    #flowers-canvas {
+      z-index: -2;
+    }
+
+    .container {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #d63384;
+      margin-bottom: 1rem;
+    }
+
+    .intro {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #444;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .phrase {
+      margin: 0.5rem 0;
+      font-style: italic;
+      color: #6c757d;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: #d63384;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #c2185b;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <audio id="bg-music" autoplay loop>
+    <source src="musicas/die-for-you.mp3" type="audio/mpeg" />
+  </audio>
+
+  <canvas id="hearts-canvas"></canvas>
+  <canvas id="flowers-canvas"></canvas>
+
+  <div class="container">
+    <h1>Para o Amor da Minha Vida 💖</h1>
+    <p class="intro">Esse site é um presente simples, mas cheio de amor. Aqui estão nossos momentos, nossas músicas, e palavras que vêm do fundo do meu coração.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h2>Galeria</h2>
+        <p>Nossas melhores memórias juntas em fotos 💞</p>
+        <input type="file" id="photoUpload" accept="image/*" multiple />
+        <div id="gallery" class="gallery"></div>
+      </div>
+
+      <div class="card">
+        <h2>Trilha Sonora do Nosso Amor</h2>
+        <ul>
+          <li>🎵 Die For You – The Weeknd</li>
+          <li>🎵 Heaven’s Divide – Donna Burke</li>
+          <li>🎵 Nuts – Lil Peep</li>
+          <li>🎵 Infrunami – Steve Lacy</li>
+          <li>🎵 Relax – Vacations</li>
+          <li>🎵 For the First Time – Mac DeMarco</li>
+          <li>🎵 When Will I See You Again – Shakka</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Carta pra Você</h2>
+        <p>Cartas interativas com escolhas 📝</p>
+        <button onclick="showLetter(0)">Carta 1</button>
+        <button onclick="showLetter(1)">Carta 2</button>
+        <button onclick="showLetter(2)">Carta 3</button>
+        <div id="letter-box" class="hidden"></div>
+      </div>
+
+      <div class="card">
+        <h2>🌟 Modo Surpresa!</h2>
+        <p>Uma pequena surpresa feita com todo amor 💝</p>
+        <button onclick="startSurprise()">Ativar Modo Surpresa</button>
+        <div id="surprise-box" class="hidden"></div>
+      </div>
+    </div>
+
+    <p class="footer">Feito com 💗 especialmente para você</p>
+  </div>
+
+  <script>
+    // Frases para fotos
+    const frases = [
+      "Cada sorriso seu vale mil mundos.",
+      "Te ver feliz é meu maior presente.",
+      "Essa foto é uma lembrança do quanto te amo.",
+      "Amo viver tudo isso com você.",
+      "Nosso amor em cada detalhe.",
+      "Você é o meu melhor momento.",
+      "O amor da minha vida está aqui ♥",
+    ];
+
+    document.getElementById("photoUpload").addEventListener("change", function (event) {
+      const files = event.target.files;
+      const gallery = document.getElementById("gallery");
+      gallery.innerHTML = "";
+
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const div = document.createElement("div");
+          const img = document.createElement("img");
+          img.src = e.target.result;
+
+          const frase = document.createElement("p");
+          frase.className = "phrase";
+          frase.textContent = frases[Math.floor(Math.random() * frases.length)];
+
+          div.appendChild(img);
+          div.appendChild(frase);
+          gallery.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    function showLetter(index) {
+      const box = document.getElementById("letter-box");
+      box.classList.remove("hidden");
+
+      const cartas = [
+        "Carta 1: Desde que você entrou na minha vida, tudo ficou mais bonito. Eu te amo mais a cada dia.",
+        "Carta 2: Em cada momento difícil, você é minha força. Em cada sorriso, minha alegria.",
+        "Carta 3: Obrigado por ser você. Completa, maravilhosa, o amor da minha vida.",
+      ];
+      box.textContent = cartas[index];
+    }
+
+    function startSurprise() {
+      drawFlowers();
+      document.getElementById("bg-music").src = "musicas/for-the-first-time.mp3";
+      const box = document.getElementById("surprise-box");
+      box.classList.remove("hidden");
+
+      box.innerHTML = `
+        <div style="padding: 20px;">
+          <h3>🌸 Poema pra Você 🌸</h3>
+          <p style="font-style: italic;">
+            Você é a poesia que meu coração escreve em silêncio.<br/>
+            Cada batida dele, uma declaração de amor por você.<br/>
+            Em cada estrela, eu vejo seu olhar. Em cada flor, seu sorriso.<br/>
+            Obrigado por ser meu mundo. 🌍❤️
+          </p>
+          <button onclick="startMiniGame()">💘 Iniciar Mini Jogo do Amor</button>
+        </div>
+      `;
+    }
+
+    function startMiniGame() {
+      const box = document.getElementById("surprise-box");
+      box.innerHTML = `
+        <h3>🎮 Jogo: Qual o nível do nosso amor?</h3>
+        <p>Responda honestamente! 💞</p>
+        <p>Eu te amo:</p>
+        <button onclick="showGameResult('muito')">Pouco</button>
+        <button onclick="showGameResult('infinitamente')">Infinitamente</button>
+      `;
+    }
+
+    function showGameResult(resposta) {
+      const box = document.getElementById("surprise-box");
+      box.innerHTML = `
+        <h3>Resultado 💖</h3>
+        <p>Você respondeu que me ama <strong>${resposta}</strong>...</p>
+        <p>E eu te amo ainda mais do que isso. Sempre.</p>
+        <p>💕 Obrigado por ser meu tudo.</p>
+      `;
+    }
+
+    // Corações animados
+    const heartCanvas = document.getElementById("hearts-canvas");
+    const heartCtx = heartCanvas.getContext("2d");
+    heartCanvas.width = window.innerWidth;
+    heartCanvas.height = window.innerHeight;
+
+    const hearts = Array.from({ length: 50 }, () => ({
+      x: Math.random() * heartCanvas.width,
+      y: Math.random() * heartCanvas.height,
+      size: Math.random() * 10 + 5,
+      speed: Math.random() * 1 + 0.5,
+    }));
+
+    function drawHearts() {
+      heartCtx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
+      hearts.forEach((h) => {
+        heartCtx.beginPath();
+        heartCtx.fillStyle = "rgba(255,105,180,0.6)";
+        heartCtx.moveTo(h.x, h.y);
+        heartCtx.arc(h.x - 3, h.y, h.size, 0, Math.PI * 2);
+        heartCtx.arc(h.x + 3, h.y, h.size, 0, Math.PI * 2);
+        heartCtx.lineTo(h.x, h.y + h.size * 2.5);
+        heartCtx.fill();
+
+        h.y -= h.speed;
+        if (h.y < -10) h.y = heartCanvas.height + 10;
+      });
+      requestAnimationFrame(drawHearts);
+    }
+    drawHearts();
+
+    // Flores animadas
+    function drawFlowers() {
+      const canvas = document.getElementById("flowers-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const petals = Array.from({ length: 30 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 15 + 10,
+        speed: Math.random() * 0.5 + 0.2,
+        swing: Math.random() * 2,
+      }));
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        petals.forEach((p) => {
+          ctx.beginPath();
+          ctx.fillStyle = "rgba(255,182,193,0.6)";
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          p.y += p.speed;
+          p.x += Math.sin(p.y * 0.01) * p.swing;
+
+          if (p.y > canvas.height) p.y = -10;
+          if (p.x > canvas.width) p.x = 0;
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  </script>
+</body>
+</html>
